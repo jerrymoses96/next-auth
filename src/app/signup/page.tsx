@@ -51,6 +51,14 @@ const SignUp = () => {
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           placeholder="password"
         />
+
+        <button
+          onClick={onSignup}
+          className="border border-black rounded-md p-1 bg-gray-500 my-3"
+        >
+          Sign Up
+        </button>
+        <Link className="text-sm underline"  href={"/login"}>Visit Login page</Link>
       </div>
     </div>
   );
