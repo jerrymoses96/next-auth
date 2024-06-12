@@ -1,17 +1,42 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Axios } from "axios";
+import axios, { Axios } from "axios";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
+  const router = useRouter();
   const [user, setUser] = React.useState({
     username: "",
     email: "",
     password: "",
   });
 
-  const onSignup = async () => {};
+  const [buttonDisabled, setButtonDisabled] = React.useState(false);
+
+  useEffect(() => {
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
+  const onSignup = async () => {
+    try {
+      const response = await axios.post("/api/users/signup", user);
+      console.log("response", response.data);
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.log("cannot signup", error);
+    }
+  };
 
   return (
     <div className="grid place-items-center h-screen">
@@ -22,7 +47,7 @@ const SignUp = () => {
           Username
         </label>
         <input
-          className="border border-black rounded-md p-1"
+          className="border border-black rounded-md p-1 text-black"
           id="username"
           type="text"
           value={user.username}
@@ -33,7 +58,7 @@ const SignUp = () => {
           Email
         </label>
         <input
-          className="border border-black rounded-md p-1"
+          className="border border-black rounded-md p-1 text-black"
           id="Email"
           type="email"
           value={user.email}
@@ -44,7 +69,7 @@ const SignUp = () => {
           Password
         </label>
         <input
-          className="border border-black rounded-md p-1"
+          className="border border-black rounded-md p-1 text-black"
           id="password"
           type="password"
           value={user.password}
@@ -56,9 +81,11 @@ const SignUp = () => {
           onClick={onSignup}
           className="border border-black rounded-md p-1 bg-gray-500 my-3"
         >
-          Sign Up
+          {buttonDisabled ? "No Sign Up" : "Sign Up"}
         </button>
-        <Link className="text-sm underline"  href={"/login"}>Visit Login page</Link>
+        <Link className="text-sm underline" href={"/login"}>
+          Visit Login page
+        </Link>
       </div>
     </div>
   );
