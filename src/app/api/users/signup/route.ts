@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
     });
-
+    // store new user to database
     const savedUser = await newUser.save();
 
     console.log(savedUser);
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       success: true,
       savedUser,
     });
+    
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
